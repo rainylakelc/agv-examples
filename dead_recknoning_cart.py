@@ -45,8 +45,8 @@ x_hat[:, 0] = x[:, 0]
 P_hat[:, :, 0] = 0.0 * np.eye(2)
 
 # Initial inputs
-u = 0.0
-u_measured = 0.0
+u = np.zeros(1)
+u_measured = np.zeros(1)
 
 # %%
 # RUN THE SIMULATION
