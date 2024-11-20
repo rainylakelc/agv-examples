@@ -160,8 +160,8 @@ plt.fill_between(
     alpha=0.2,
     label=str(100 * (1 - ALPHA)) + r" \% Confidence",
 )
-plt.plot(t, x[0, :] - x_hat[0, :], "C0", label="Estimator Error")
-plt.plot(t, x[0, :] - y, "C2", label="Sensor error", alpha=0.2)
+plt.plot(t, x[0, :] - x_hat[0, :], "C0", label="Estimator error")
+plt.plot(t, x[0, :] - y, "C2", label="GPS-like sensor error", alpha=0.2)
 plt.ylabel(r"$e_1$ [m]")
 plt.setp(ax1, xticklabels=[])
 plt.grid(color="0.95")
