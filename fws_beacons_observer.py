@@ -179,8 +179,8 @@ for k in range(1, N):
     # Use the range measurements to estimate the robot's state
     x_hat[:, k] = fws_observer(x_hat[:, k - 1], u[:, k - 1], r, f_map)
     # Choose some new inputs
-    u[0, k] = 5.0
-    u[1, k] = -0.25 * np.sin(1.0 * t[k])
+    u[0, k] = 2.0
+    u[1, k] = -0.1 * np.sin(1 * t[k])
     # Simulate the robot's motion
     x[:, k] = rk_four(vehicle.f, x[:, k - 1], u[:, k - 1], T)
 
