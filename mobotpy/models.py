@@ -808,7 +808,7 @@ class FourWheelSteered:
         f = np.zeros(4)
         f[0] = u[0] * np.cos(x[2]) * np.cos(x[3])
         f[1] = u[0] * np.sin(x[2]) * np.cos(x[3])
-        f[2] = u[0] * 1.0 / (2.0 * self.ell_W) * np.sin(x[3])
+        f[2] = u[0] * 1.0 / (0.5 * self.ell_W) * np.sin(x[3])
         f[3] = u[1]
         return f
 
@@ -837,7 +837,7 @@ class FourWheelSteered:
     def draw(self, x):
         """Finds points that draw a four-wheel steered vehicle.
 
-                Parameters
+        Parameters
         ----------
         x : ndarray of length 4
             The vehicle's state (x, y, theta, phi).
