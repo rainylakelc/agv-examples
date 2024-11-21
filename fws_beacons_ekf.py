@@ -341,7 +341,7 @@ plt.fill_between(
 )
 plt.plot(t, x[0, :] - x_hat[0, :], "C0", label="Error")
 plt.grid(color="0.95")
-plt.ylabel(r"$x$ [m]")
+plt.ylabel(r"$e_x$ [m]")
 plt.setp(ax2a, xticklabels=[])
 plt.legend()
 ax3b = plt.subplot(412)
@@ -356,7 +356,7 @@ plt.fill_between(
 )
 plt.plot(t, x[1, :] - x_hat[1, :], "C0", label="Error")
 plt.grid(color="0.95")
-plt.ylabel(r"$y$ [m]")
+plt.ylabel(r"$e_y$ [m]")
 plt.setp(ax2b, xticklabels=[])
 ax3c = plt.subplot(413)
 sigma[2, :] = np.sqrt(s1 * P_hat[2, 2, :])
@@ -369,7 +369,7 @@ plt.fill_between(
     label=str(100 * (1 - ALPHA)) + r" \% Confidence",
 )
 plt.plot(t, (x[2, :] - x_hat[2, :]) * 180.0 / np.pi, "C0", label="Error")
-plt.ylabel(r"$\theta$ [deg]")
+plt.ylabel(r"$e_\theta$ [deg]")
 plt.grid(color="0.95")
 plt.setp(ax2c, xticklabels=[])
 ax3d = plt.subplot(414)
@@ -383,7 +383,7 @@ plt.fill_between(
     label=str(100 * (1 - ALPHA)) + r" \% Confidence",
 )
 plt.plot(t, (x[3, :] - x_hat[3, :]) * 180 / np.pi, "C0", label="Error")
-plt.ylabel(r"$\phi$ [deg]")
+plt.ylabel(r"$e_\phi$ [deg]")
 plt.grid(color="0.95")
 plt.xlabel(r"$t$ [s]")
 
