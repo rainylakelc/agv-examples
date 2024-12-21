@@ -2,4 +2,4 @@
 *.code-workspace
 *.pyc
 *.venv
-*.vscode
+# *.vscode
