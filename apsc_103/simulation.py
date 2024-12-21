@@ -7,13 +7,14 @@ GitHub: https://github.com/botprof/agv-examples
 # %%
 # SIMULATION SETUP
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
+from math import pi
 from mobotpy.models import DiffDrive
 from mobotpy.integration import rk_four
-from math import pi
-from path_model import *
+from apsc_103.path_model import *
 
 # %%
 # COMPUTE THE PATH
