@@ -111,9 +111,15 @@ for k in range(1, N):
     )
     B = np.array([[np.cos(x_d[2, k - 1]), 0], [np.sin(x_d[2, k - 1]), 0], [0, 1]])
 
-    # Compute the gain matrix to place poles of (A - BK) at p
-    p = np.array([-1.0, -2.0, -0.5])
-    K = signal.place_poles(A, B, p) #FIX HERE!!!! - poles can't be placed
+    try:
+        # Compute the gain matrix to place poles of (A - BK) at p
+        p = np.array([-1.0, -2.0, -0.5])
+        K = signal.place_poles(A, B, p) #FIX HERE!!!! - poles can't be placed
+    except ValueError as err:
+        print(f"k = {k}")
+        print(f"A = {A}")
+        print(f"B = {B}")
+        raise err
 
     # Compute the controls (v, omega) and convert to wheel speeds (v_L, v_R)
     u_unicycle = -K.gain_matrix @ (x[:, k - 1] - x_d[:, k - 1]) + u_d[:, k]
