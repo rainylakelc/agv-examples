@@ -60,7 +60,7 @@ for segment in path:
             x_d[0, k], x_d[1, k] = segment.position_at_point((k - (segment_time/T))*T, segment.velocity_at_point()) # x and y coords
             x_d[2, k] = 0 # Orientation
             u_d[0, k] = segment.velocity_at_point() # Forward velocity
-            u_d[0, k] = 0 # Angular velocity
+            u_d[1, k] = 0 # Angular velocity
         segment_time += segment_duration
     elif isinstance(segment, ArcSegment): 
         segment_duration = segment.length / segment.velocity_at_point()
@@ -69,7 +69,7 @@ for segment in path:
             x_d[0, k], x_d[1, k] = segment.position_at_point((k - (segment_time/T))*T, angular_velocity)
             x_d[2, k] = segment.start_angle + angular_velocity * ((k - int(segment_time / T)) * T)
             u_d[0, k] = segment.velocity_at_point()
-            u_d[0, k] = angular_velocity
+            u_d[1, k] = angular_velocity
         segment_time += segment_duration
 
 
