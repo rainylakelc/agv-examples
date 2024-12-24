@@ -43,12 +43,35 @@ OMEGA = 0.1
 # Pre-compute the desired trajectory
 x_d = np.zeros((3, N))
 u_d = np.zeros((2, N))
+segment_time = 0.0
+"""
 for k in range(0, N):
-    x_d[0, k] = R * np.sin(OMEGA * t[k])
-    x_d[1, k] = R * (1 - np.cos(OMEGA * t[k]))
-    x_d[2, k] = OMEGA * t[k]
-    u_d[0, k] = R * OMEGA
-    u_d[1, k] = OMEGA
+    x_d[0, k] = R * np.sin(OMEGA * t[k]) #x
+    x_d[1, k] = R * (1 - np.cos(OMEGA * t[k])) #y
+    x_d[2, k] = OMEGA * t[k] #orientation?
+    u_d[0, k] = R * OMEGA #forward velocity
+    u_d[1, k] = OMEGA #angular velocity
+"""
+# Loop to iterate over segments of specified line and arc segment: 
+for segment in path: 
+    if isinstance(segment, LineSegment):
+        segment_duration = segment.length / segment.velocity_at_point()
+        for k in range (int(segment_time/T), int((segment_time + segment_duration)/T)):
+            x_d[0, k], x_d[1, k] = segment.position_at_point((k - (segment_time/T))*T, segment.velocity_at_point()) # x and y coords
+            x_d[2, k] = 0 # Orientation
+            u_d[0, k] = segment.velocity_at_point() # Forward velocity
+            u_d[0, k] = 0 # Angular velocity
+        segment_time += segment_duration
+    elif isinstance(segment, ArcSegment): 
+        segment_duration = segment.length / segment.velocity_at_point()
+        angular_velocity = segment.velocity_at_point() / segment.radius
+        for k in range (int(segment_time/T), int((segment_time + segment_duration)/T)):
+            x_d[0, k], x_d[1, k] = segment.position_at_point((k - (segment_time/T))*T, angular_velocity)
+            x_d[2, k] = segment.start_angle + angular_velocity * ((k - int(segment_time / T)) * T)
+            u_d[0, k] = segment.velocity_at_point()
+            u_d[0, k] = angular_velocity
+        segment_time += segment_duration
+
 
 # %%
 # VEHICLE SETUP
@@ -90,7 +113,7 @@ for k in range(1, N):
 
     # Compute the gain matrix to place poles of (A - BK) at p
     p = np.array([-1.0, -2.0, -0.5])
-    K = signal.place_poles(A, B, p)
+    K = signal.place_poles(A, B, p) #FIX HERE!!!! - poles can't be placed
 
     # Compute the controls (v, omega) and convert to wheel speeds (v_L, v_R)
     u_unicycle = -K.gain_matrix @ (x[:, k - 1] - x_d[:, k - 1]) + u_d[:, k]
