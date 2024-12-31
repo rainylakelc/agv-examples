@@ -27,50 +27,34 @@ path = [
 # COMPUTE THE REFERENCE TRAJECTORY
 
 # Set the simulation time [s] and the sample period [s]
-SIM_TIME = 20.0
+SIM_TIME = sum(segment.duration() for segment in path)
 T = 0.04
 
 # Create an array of time values [s]
 t = np.arange(0.0, SIM_TIME, T)
 N = np.size(t)
 
-# Radius of the circle [m]
-R = 10
+# # Radius of the circle [m]
+# R = 10
 
-# Angular rate [rad/s] at which to traverse the circle
-OMEGA = 0.1
+# # Angular rate [rad/s] at which to traverse the circle
+# OMEGA = 0.1
 
 # Pre-compute the desired trajectory
 x_d = np.zeros((3, N))
 u_d = np.zeros((2, N))
 segment_time = 0.0
-"""
-for k in range(0, N):
-    x_d[0, k] = R * np.sin(OMEGA * t[k]) #x
-    x_d[1, k] = R * (1 - np.cos(OMEGA * t[k])) #y
-    x_d[2, k] = OMEGA * t[k] #orientation?
-    u_d[0, k] = R * OMEGA #forward velocity
-    u_d[1, k] = OMEGA #angular velocity
-"""
+
 # Loop to iterate over segments of specified line and arc segment: 
 for segment in path: 
-    if isinstance(segment, LineSegment):
-        segment_duration = segment.length / segment.velocity_at_point()
-        for k in range (int(segment_time/T), int((segment_time + segment_duration)/T)):
-            x_d[0, k], x_d[1, k] = segment.position_at_point((k - (segment_time/T))*T, segment.velocity_at_point()) # x and y coords
-            x_d[2, k] = 0 # Orientation
-            u_d[0, k] = segment.velocity_at_point() # Forward velocity
-            u_d[1, k] = 0 # Angular velocity
-        segment_time += segment_duration
-    elif isinstance(segment, ArcSegment): 
-        segment_duration = segment.length / segment.velocity_at_point()
-        angular_velocity = segment.velocity_at_point() / segment.radius
-        for k in range (int(segment_time/T), int((segment_time + segment_duration)/T)):
-            x_d[0, k], x_d[1, k] = segment.position_at_point((k - (segment_time/T))*T, angular_velocity)
-            x_d[2, k] = segment.start_angle + angular_velocity * ((k - int(segment_time / T)) * T)
-            u_d[0, k] = segment.velocity_at_point()
-            u_d[1, k] = angular_velocity
-        segment_time += segment_duration
+    segment_duration = segment.duration()
+    for k in range (int(segment_time/T), int((segment_time + segment_duration)/T)):
+        t = (k - (segment_time/T))*T
+        x_d[0, k], x_d[1, k] = segment.position_at_point(t) # x and y coords
+        x_d[2, k] = segment.orientation_at_point(t) # Orientation
+        u_d[0, k] = VELOCITY # Forward velocity
+        u_d[1, k] = segment.angular_velocity() # Angular velocity
+    segment_time += segment_duration
 
 
 # %%
