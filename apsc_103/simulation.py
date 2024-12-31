@@ -19,7 +19,7 @@ from apsc_103.path_model import *
 # %%
 # COMPUTE THE PATH
 path = [
-    LineSegment(0, 0, 1, 0),
+    LineSegment(0, 0, 1, 1),
     ArcSegment(1, 1, 1, -pi/2, 0),
 ]
 
@@ -44,14 +44,15 @@ N = np.size(t)
 x_d = np.zeros((3, N))
 u_d = np.zeros((2, N))
 segment_time = 0.0
+# t1 = 0
 
 # Loop to iterate over segments of specified line and arc segment: 
 for segment in path: 
     segment_duration = segment.duration()
     for k in range (int(segment_time/T), int((segment_time + segment_duration)/T)):
-        t = (k - (segment_time/T))*T
-        x_d[0, k], x_d[1, k] = segment.position_at_point(t) # x and y coords
-        x_d[2, k] = segment.orientation_at_point(t) # Orientation
+        t1 = (k - (segment_time/T))*T
+        x_d[0, k], x_d[1, k] = segment.position_at_point(t1) # x and y coords
+        x_d[2, k] = segment.orientation_at_point(t1) # Orientation
         u_d[0, k] = VELOCITY # Forward velocity
         u_d[1, k] = segment.angular_velocity() # Angular velocity
     segment_time += segment_duration
@@ -98,7 +99,7 @@ for k in range(1, N):
     try:
         # Compute the gain matrix to place poles of (A - BK) at p
         p = np.array([-1.0, -2.0, -0.5])
-        K = signal.place_poles(A, B, p) #FIX HERE!!!! - poles can't be placed
+        K = signal.place_poles(A, B, p)
     except ValueError as err:
         print(f"k = {k}")
         print(f"A = {A}")
@@ -122,7 +123,7 @@ plt.rc("savefig", bbox="tight")
 fig1 = plt.figure(1)
 fig1.set_figheight(6.4)
 ax1a = plt.subplot(411)
-plt.plot(t, x_d[0, :], "C1--")
+plt.plot(t, x_d[0, :], "C1--") #Here is the error?
 plt.plot(t, x[0, :], "C0")
 plt.grid(color="0.95")
 plt.ylabel("x [m]")
