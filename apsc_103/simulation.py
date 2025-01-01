@@ -19,8 +19,8 @@ from apsc_103.path_model import *
 # %%
 # COMPUTE THE PATH
 path = [
-    LineSegment(0, 0, 1, 1),
-    ArcSegment(1, 1, 1, -pi/2, 0),
+    LineSegment(0, 0, 5, 0),
+    ArcSegment(5, 3, 3, -pi/2, 0),
 ]
 
 # %%
@@ -47,6 +47,7 @@ segment_time = 0.0
 # t1 = 0
 
 # Loop to iterate over segments of specified line and arc segment: 
+max_k = -1
 for segment in path: 
     segment_duration = segment.duration()
     for k in range (int(segment_time/T), int((segment_time + segment_duration)/T)):
@@ -55,7 +56,13 @@ for segment in path:
         x_d[2, k] = segment.orientation_at_point(t1) # Orientation
         u_d[0, k] = VELOCITY # Forward velocity
         u_d[1, k] = segment.angular_velocity() # Angular velocity
+        max_k = k
     segment_time += segment_duration
+if max_k < N - 1:
+    N = max_k + 1
+    t = t[:N]
+    x_d = x_d[:, :N]
+    u_d = u_d[:, :N]
 
 
 # %%
@@ -73,7 +80,7 @@ vehicle = DiffDrive(ELL)
 # Initial conditions
 x_init = np.zeros(3)
 x_init[0] = 0.0
-x_init[1] = 5.0
+x_init[1] = 0.5
 x_init[2] = 0.0
 
 # Setup some arrays
@@ -183,7 +190,7 @@ plt.legend()
 # MAKE AN ANIMATION
 
 # Create the animation
-ani = vehicle.animate_trajectory(x, x_d, T)
+ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif")
 
 # Create and save the animation
 # ani = vehicle.animate_trajectory(
