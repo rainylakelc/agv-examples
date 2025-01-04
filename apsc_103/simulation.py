@@ -18,6 +18,16 @@ from apsc_103.path_model import *
 
 # %%
 # COMPUTE THE PATH
+"""
+Insert your path planning code in this cell. You can write it in another
+file and call it from here, or you can write it all in here if you prefer. 
+Your algorithm should output a path array with the line and arc segments
+that it outputs as the path of best fit. The path array below is just an
+example and can be replace with your code's output. 
+You do not have to worry about the code in the other cells, unless you 
+have to change a parameter for whatever reason. 
+"""
+
 path = [
     LineSegment(0, 0, 5, 0),
     ArcSegment(5, 3, 3, -pi/2, 0),
@@ -130,7 +140,7 @@ plt.rc("savefig", bbox="tight")
 fig1 = plt.figure(1)
 fig1.set_figheight(6.4)
 ax1a = plt.subplot(411)
-plt.plot(t, x_d[0, :], "C1--") #Here is the error?
+plt.plot(t, x_d[0, :], "C1--") 
 plt.plot(t, x[0, :], "C0")
 plt.grid(color="0.95")
 plt.ylabel("x [m]")
@@ -194,8 +204,9 @@ ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif")
 
 # Create and save the animation
 # ani = vehicle.animate_trajectory(
-#     x, x_d, T, True, "../agv-book/gifs/ch4/control_approx_linearization.gif"
+#     x, x_d, T, True, "control_approx_linearization.gif"
 # )
+
 
 # Show all the plots to the screen
 plt.show()

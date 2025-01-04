@@ -1,5 +1,13 @@
+"""
+This file declares the classes LineSegment and ArcSegment, 
+which are used to model the path and generate the trajectory. 
+You should initialize the start and end x & y values when 
+declaring a LineSegment, and the center coordinates, radius, 
+and start and end angles when declaring an ArcSegment.
+"""
 import math
 
+# Velocity is constant
 VELOCITY = 1.0 # [m/s]
 
 class LineSegment:
