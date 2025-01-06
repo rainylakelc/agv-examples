@@ -8,7 +8,7 @@ and start and end angles when declaring an ArcSegment.
 import math
 
 # Velocity is constant
-VELOCITY = 1.0 # [m/s]
+VELOCITY = 1.0 # [feet/s]
 
 class LineSegment:
     def __init__(self, start_x, start_y, end_x, end_y) -> None:
@@ -46,7 +46,7 @@ class ArcSegment:
         return self.length / VELOCITY
     def position_at_point(self, t):
         # Find robot position at time t: 
-        distance = t * VELOCITY # [m]
+        distance = t * VELOCITY # [feet]
         if self.end_angle < self.start_angle:
             distance = -distance
         angle = self.start_angle + distance / self.radius # [rad]
@@ -60,3 +60,10 @@ class ArcSegment:
             return self.start_angle - t * VELOCITY / self.radius + 0.5 * math.pi
     def angular_velocity(self):
         return VELOCITY / self.radius
+    
+class Obstacle: 
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        
+        

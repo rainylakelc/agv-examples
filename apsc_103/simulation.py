@@ -10,6 +10,7 @@ GitHub: https://github.com/botprof/agv-examples
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 from scipy import signal
 from math import pi
 from mobotpy.models import DiffDrive
@@ -31,6 +32,12 @@ have to change a parameter for whatever reason.
 path = [
     LineSegment(0, 0, 5, 0),
     ArcSegment(5, 3, 3, -pi/2, 0),
+]
+
+enable_obstacles = True
+obstacles = [
+    Obstacle(5, 5),
+    Obstacle(20, 20)
 ]
 
 # %%
@@ -127,6 +134,11 @@ for k in range(1, N):
     u_unicycle = -K.gain_matrix @ (x[:, k - 1] - x_d[:, k - 1]) + u_d[:, k]
     u[:, k] = vehicle.uni2diff(u_unicycle)
 
+# Find if obstacle has been hit by robot
+if enable_obstacles == True: 
+    hit = False 
+
+
 # %%
 # MAKE PLOTS
 
@@ -143,14 +155,14 @@ ax1a = plt.subplot(411)
 plt.plot(t, x_d[0, :], "C1--") 
 plt.plot(t, x[0, :], "C0")
 plt.grid(color="0.95")
-plt.ylabel("x [m]")
+plt.ylabel("x [feet]")
 plt.setp(ax1a, xticklabels=[])
 plt.legend(["Desired", "Actual"])
 ax1b = plt.subplot(412)
 plt.plot(t, x_d[1, :], "C1--")
 plt.plot(t, x[1, :], "C0")
 plt.grid(color="0.95")
-plt.ylabel("y [m]")
+plt.ylabel("y [feet]")
 plt.setp(ax1b, xticklabels=[])
 ax1c = plt.subplot(413)
 plt.plot(t, x_d[2, :] * 180.0 / np.pi, "C1--")
@@ -162,7 +174,7 @@ ax1d = plt.subplot(414)
 plt.step(t, u[0, :], "C2", where="post", label="$v_L$")
 plt.step(t, u[1, :], "C3", where="post", label="$v_R$")
 plt.grid(color="0.95")
-plt.ylabel("u [m/s]")
+plt.ylabel("u [feet/s]")
 plt.xlabel("t [s]")
 plt.legend()
 
@@ -171,6 +183,7 @@ plt.legend()
 
 # Plot the position of the vehicle in the plane
 fig2 = plt.figure(2)
+ax = fig2.add_subplot(1, 1, 1)
 plt.plot(x_d[0, :], x_d[1, :], "C1--", label="Desired")
 plt.plot(x[0, :], x[1, :], "C0", label="Actual")
 plt.axis("equal")
@@ -186,9 +199,16 @@ plt.fill(X_L, Y_L, "k")
 plt.fill(X_R, Y_R, "k")
 plt.fill(X_C, Y_C, "k")
 plt.fill(X_B, Y_B, "C3", alpha=0.5, label="End")
-plt.xlabel("x [m]")
-plt.ylabel("y [m]")
+plt.xlabel("x [feet]")
+plt.ylabel("y [feet]")
 plt.legend()
+
+# Plot the position of the obstacle 
+# Obstacle is a 4'x4' square, and the point given refers to the midpoint of the obstacle
+if enable_obstacles == True:
+    for obstacle in obstacles:
+        rect = patches.Rectangle([(obstacle.x-2), (obstacle.y-2)], 4, 4)
+        ax.add_patch(rect)
 
 # Save the plot
 # plt.savefig("../agv-book/figs/ch4/control_approx_linearization_fig2.pdf")
