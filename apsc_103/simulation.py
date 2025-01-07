@@ -24,20 +24,21 @@ Insert your path planning code in this cell. You can write it in another
 file and call it from here, or you can write it all in here if you prefer. 
 Your algorithm should output a path array with the line and arc segments
 that it outputs as the path of best fit. The path array below is just an
-example and can be replace with your code's output. 
-You do not have to worry about the code in the other cells, unless you 
+example and can be replaced with your code's output. 
+You do not really have to worry about the code in the other cells, unless you 
 have to change a parameter for whatever reason. 
 """
+
+enable_obstacles = True
+# Midpoint(s) of 4'x4' pallet(s)
+obstacles = [
+    # Obstacle(5, 3),
+    Obstacle(20, 20),
+]
 
 path = [
     LineSegment(0, 0, 5, 0),
     ArcSegment(5, 3, 3, -pi/2, 0),
-]
-
-enable_obstacles = True
-obstacles = [
-    Obstacle(5, 5),
-    Obstacle(20, 20)
 ]
 
 # %%
@@ -133,11 +134,7 @@ for k in range(1, N):
     # Compute the controls (v, omega) and convert to wheel speeds (v_L, v_R)
     u_unicycle = -K.gain_matrix @ (x[:, k - 1] - x_d[:, k - 1]) + u_d[:, k]
     u[:, k] = vehicle.uni2diff(u_unicycle)
-
-# Find if obstacle has been hit by robot
-if enable_obstacles == True: 
-    hit = False 
-
+          
 
 # %%
 # MAKE PLOTS
@@ -215,6 +212,56 @@ if enable_obstacles == True:
 
 # Show the plots to the screen
 # plt.show()
+
+# %%
+# Find if obstacle has been hit by robot
+def circle_intersects_rectangle(circle_center, rect_center, rect_size):
+    # Circle and rectangle parameters
+    x_c, y_c = circle_center
+    x, y = rect_center
+    half_size = rect_size / 2
+    x_min, x_max = x - half_size, x + half_size
+    y_min, y_max = y - half_size, y + half_size
+
+    # Is circle's center is inside the rectangle
+    if x_min <= x_c <= x_max and y_min <= y_c <= y_max:
+        return True  
+
+    # distance to rectangle edges
+    closest_x = np.clip(x_c, x_min, x_max)
+    closest_y = np.clip(y_c, y_min, y_max)
+
+    # distance from the circle's center to this closest point
+    distance = np.sqrt((closest_x - x_c)**2 + (closest_y - y_c)**2)
+    if distance <= ELL:
+        return True 
+
+    # Check if any rectangle corner is inside the circle
+    corners = [(x_min, y_min), (x_min, y_max), (x_max, y_min), (x_max, y_max)]
+    for corner_x, corner_y in corners:
+        distance_to_corner = np.sqrt((corner_x - x_c)**2 + (corner_y - y_c)**2)
+        if distance_to_corner <= ELL:
+            return True  # Circle intersects the rectangle at a corner
+
+    return False  # No intersection found
+
+def check_robot_path(x_coords, y_coords, rect_center, rect_size):
+    hit = False
+    for x_c, y_c in zip(x_coords, y_coords):
+        if circle_intersects_rectangle((x_c, y_c), rect_center, rect_size):
+            hit = True
+    return hit
+
+if enable_obstacles == True: 
+    hit = False
+    x_coords = x[0, :]
+    y_coords = x[1, :]
+    for obstacle in obstacles:
+        hit = check_robot_path(x_coords, y_coords, (obstacle.x, obstacle.y), 4)
+        if hit == True:
+            print("The robot hit an obstacle")
+        
+
 
 # %%
 # MAKE AN ANIMATION
