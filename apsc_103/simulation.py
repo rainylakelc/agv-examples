@@ -7,7 +7,6 @@ GitHub: https://github.com/botprof/agv-examples
 # %%
 # SIMULATION SETUP
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -252,16 +251,21 @@ def check_robot_path(x_coords, y_coords, rect_center, rect_size):
             hit = True
     return hit
 
+x_coords = x[0, :]
+y_coords = x[1, :]
 if enable_obstacles == True: 
     hit = False
-    x_coords = x[0, :]
-    y_coords = x[1, :]
     for obstacle in obstacles:
         hit = check_robot_path(x_coords, y_coords, (obstacle.x, obstacle.y), 4)
         if hit == True:
             print("The robot hit an obstacle")
-        
 
+wall_hit = False
+for x1, y1 in zip(x_coords, y_coords):
+    if (x1 - ELL) < 0 or (x1 + ELL) > 50 or (y1 - ELL) < 0 or (y1+ELL) > 25:
+        wall_hit = True       
+if wall_hit == True: 
+    print("Robot hit a wall of the warehouse")
 
 # %%
 # MAKE AN ANIMATION
