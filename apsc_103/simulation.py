@@ -29,7 +29,7 @@ have to change a parameter for whatever reason.
 """
 goal_points = [
     (10, 5),
-    (6, 2)
+    (6, 2),
 ]
 
 
@@ -306,9 +306,9 @@ obstacle_coords = []
 if enable_obstacles == True:
     for obstacle in obstacles:
         obstacle_coords.append(((obstacle.x-2), (obstacle.y-2)))
-    ani = ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif", True, obstacle_coords)
+    ani = ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif", goal_points, True, obstacle_coords)
 else: 
-    ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif", False)
+    ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif", goal_points, False)
 
 # Create and save the animation
 # ani = vehicle.animate_trajectory(

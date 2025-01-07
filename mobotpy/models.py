@@ -263,7 +263,7 @@ class DiffDrive:
         return ani
 
     def animate_trajectory(
-        self, x, xd, T, save_ani=False, filename="animate_diffdrive.gif", enable_obstacles=False, obstacle_coords=[]
+        self, x, xd, T, save_ani=False, filename="animate_diffdrive.gif", goal_points = [], enable_obstacles=False, obstacle_coords=[]
     ):
         """Create an animation of a differential drive vehicle with plots of
         actual and desired trajectories.
@@ -280,6 +280,9 @@ class DiffDrive:
         plt.axis("equal")
         warehouse_border = patches.Rectangle((0, 0), 50, 25, fill=False, linewidth=1)
         ax.add_patch(warehouse_border)
+        for point in goal_points:
+            point = patches.Circle(point, radius=0.25, color='r')
+            ax.add_patch(point)
         if enable_obstacles == True:
             for coord in obstacle_coords:
                 rect = patches.Rectangle(coord, 4, 4)
