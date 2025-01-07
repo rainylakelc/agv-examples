@@ -15,6 +15,7 @@ import numpy as np
 from mobotpy import graphics
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import matplotlib.patches as patches
 from scipy.stats import chi2
 from matplotlib import patches
 
@@ -262,7 +263,7 @@ class DiffDrive:
         return ani
 
     def animate_trajectory(
-        self, x, xd, T, save_ani=False, filename="animate_diffdrive.gif"
+        self, x, xd, T, save_ani=False, filename="animate_diffdrive.gif", enable_obstacles=False, obstacle_coords=[]
     ):
         """Create an animation of a differential drive vehicle with plots of
         actual and desired trajectories.
@@ -274,9 +275,13 @@ class DiffDrive:
         filename (default 'animate_diffdrive.gif').
         """
         fig, ax = plt.subplots()
-        plt.xlabel(r"$x$ [m]")
-        plt.ylabel(r"$y$ [m]")
+        plt.xlabel(r"$x$ [feet]")
+        plt.ylabel(r"$y$ [feet]")
         plt.axis("equal")
+        if enable_obstacles == True:
+            for coord in obstacle_coords:
+                rect = patches.Rectangle(coord, 4, 4)
+                ax.add_patch(rect)
         (desired,) = ax.plot([], [], "--C1")
         (line,) = ax.plot([], [], "C0")
         (leftwheel,) = ax.fill([], [], color="k")

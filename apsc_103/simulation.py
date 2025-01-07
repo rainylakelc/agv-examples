@@ -31,13 +31,13 @@ have to change a parameter for whatever reason.
 enable_obstacles = True
 # Midpoint(s) of 4'x4' pallet(s)
 obstacles = [
-    # Obstacle(5, 3),
+    Obstacle(5, 3),
     Obstacle(20, 20),
 ]
 
 path = [
-    LineSegment(0, 0, 5, 0),
-    ArcSegment(5, 3, 3, -pi/2, 0),
+    LineSegment(1, 1, 5, 1),
+    ArcSegment(6, 4, 3, -pi/2, 0),
 ]
 
 # %%
@@ -96,8 +96,8 @@ vehicle = DiffDrive(ELL)
 
 # Initial conditions
 x_init = np.zeros(3)
-x_init[0] = 0.0
-x_init[1] = 0.5
+x_init[0] = 1.0
+x_init[1] = 1.0
 x_init[2] = 0.0
 
 # Setup some arrays
@@ -271,7 +271,13 @@ if wall_hit == True:
 # MAKE AN ANIMATION
 
 # Create the animation
-ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif")
+obstacle_coords = []
+if enable_obstacles == True:
+    for obstacle in obstacles:
+        obstacle_coords.append((obstacle.x, obstacle.y))
+    ani = ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif", True, obstacle_coords)
+else: 
+    ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif", False)
 
 # Create and save the animation
 # ani = vehicle.animate_trajectory(
