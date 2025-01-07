@@ -31,7 +31,7 @@ have to change a parameter for whatever reason.
 enable_obstacles = True
 # Midpoint(s) of 4'x4' pallet(s)
 obstacles = [
-    Obstacle(5, 3),
+    Obstacle(4, 5),
     Obstacle(20, 20),
 ]
 
@@ -274,7 +274,7 @@ if wall_hit == True:
 obstacle_coords = []
 if enable_obstacles == True:
     for obstacle in obstacles:
-        obstacle_coords.append((obstacle.x, obstacle.y))
+        obstacle_coords.append(((obstacle.x-2), (obstacle.y-2)))
     ani = ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif", True, obstacle_coords)
 else: 
     ani = vehicle.animate_trajectory(x, x_d, T, True, "animation.gif", False)
