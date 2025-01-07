@@ -27,9 +27,15 @@ example and can be replaced with your code's output.
 You do not really have to worry about the code in the other cells, unless you 
 have to change a parameter for whatever reason. 
 """
+goal_points = [
+    (10, 5),
+    (6, 2)
+]
 
-enable_obstacles = True
-# Midpoint(s) of 4'x4' pallet(s)
+
+show_walls = True 
+enable_obstacles = True # Change based on whether you'd like to enable obstacles
+# Midpoint(s) of 4'x4' pallet(s):
 obstacles = [
     Obstacle(4, 5),
     Obstacle(20, 20),
@@ -199,6 +205,16 @@ plt.xlabel("x [feet]")
 plt.ylabel("y [feet]")
 plt.legend()
 
+# Make border of warehouse
+if show_walls == True:
+    warehouse_border = patches.Rectangle((0, 0), 50, 25, fill=False, linewidth=1)
+    ax.add_patch(warehouse_border)
+
+# Show points 
+for point in goal_points:
+    point = patches.Circle(point, radius=0.25, color='r')
+    ax.add_patch(point)
+
 # Plot the position of the obstacle 
 # Obstacle is a 4'x4' square, and the point given refers to the midpoint of the obstacle
 if enable_obstacles == True:
@@ -213,6 +229,7 @@ if enable_obstacles == True:
 # plt.show()
 
 # %%
+# OBSTACLE AND POINT HITS
 # Find if obstacle has been hit by robot
 def circle_intersects_rectangle(circle_center, rect_center, rect_size):
     # Circle and rectangle parameters
@@ -260,12 +277,26 @@ if enable_obstacles == True:
         if hit == True:
             print("The robot hit an obstacle")
 
+# Check if wall has been hit
 wall_hit = False
 for x1, y1 in zip(x_coords, y_coords):
     if (x1 - ELL) < 0 or (x1 + ELL) > 50 or (y1 - ELL) < 0 or (y1+ELL) > 25:
         wall_hit = True       
 if wall_hit == True: 
     print("Robot hit a wall of the warehouse")
+
+hit_points = set()
+# Check if robot has made it to a point:
+for x_c, y_c in zip(x_coords, y_coords):
+    for x_goal, y_goal in goal_points:
+        # Compute dist from the robot center to the target point
+        distance = np.sqrt((x_c - x_goal)**2 + (y_c - y_goal)**2)
+
+        # Check if dist is less than or equal to the radius
+        if distance <= ELL:
+            hit_points.add((x_goal, y_goal))
+if len(hit_points) > 0:
+    print(f"The robot successfully got to the point(s): {hit_points}")
 
 # %%
 # MAKE AN ANIMATION

@@ -278,6 +278,8 @@ class DiffDrive:
         plt.xlabel(r"$x$ [feet]")
         plt.ylabel(r"$y$ [feet]")
         plt.axis("equal")
+        warehouse_border = patches.Rectangle((0, 0), 50, 25, fill=False, linewidth=1)
+        ax.add_patch(warehouse_border)
         if enable_obstacles == True:
             for coord in obstacle_coords:
                 rect = patches.Rectangle(coord, 4, 4)
